@@ -33,31 +33,31 @@
   },
   "homepage": "https://github.com/yeyan1996/file-upload#readme",
   "dependencies": {
-    "core-js": "^3.4.3",
-    "dayjs": "^1.8.17",
-    "element-ui": "^2.13.0",
-    "vue": "^2.6.10"
+    "core-js": "^3.8.0",
+    "dayjs": "^1.9.6",
+    "element-ui": "^2.14.1",
+    "vue": "^2.6.12"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-optional-chaining": "^7.7.5",
-    "@types/fs-extra": "^8.0.1",
-    "@vue/cli-plugin-babel": "^4.1.0",
-    "@vue/cli-plugin-eslint": "^4.1.0",
-    "@vue/cli-service": "^4.1.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.12.7",
+    "@types/fs-extra": "^8.1.1",
+    "@vue/cli-plugin-babel": "^4.5.9",
+    "@vue/cli-plugin-eslint": "^4.5.9",
+    "@vue/cli-service": "^4.5.9",
     "@vue/eslint-config-prettier": "^5.0.0",
-    "babel-eslint": "^10.0.3",
+    "babel-eslint": "^10.1.0",
     "eslint": "^5.16.0",
-    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-vue": "^5.0.0",
     "fs-extra": "^8.1.0",
     "husky": "^3.1.0",
     "lint-staged": "^9.5.0",
-    "multiparty": "^4.2.1",
-    "nodemon": "^2.0.1",
+    "multiparty": "^4.2.2",
+    "nodemon": "^2.0.6",
     "prettier": "^1.19.1",
-    "sass": "^1.23.7",
-    "sass-loader": "^8.0.0",
-    "spark-md5": "^3.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "sass": "^1.29.0",
+    "sass-loader": "^8.0.2",
+    "spark-md5": "^3.0.1",
+    "vue-template-compiler": "^2.6.12"
   }
 }

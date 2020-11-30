@@ -49,7 +49,7 @@
 </template>
 
 <script>
-const SIZE = 10 * 1024 * 1024; // 切片大小
+const SIZE = 5 * 1024 * 1024; // 切片大小
 
 const DefaultBucketName = "test";
 const Status = {
@@ -142,7 +142,7 @@ export default {
         );
         xhr.setRequestHeader(
           "Authorization",
-          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2MDYyMDIxNTQsInBheWxvYWQiOiJ0ZXN0MSIsImlzcyI6InVuaWluLW1pbmlvIiwibGFiZWwiOiI5YTgwZmNiM2I2MWE0OTYzODJjNDY5OTM0MDYwZGExMyIsImV4cCI6MTYwNjIwOTM1NH0.CvMvTuwdAGUIEw-n0JB3HvKIlpiAp-sHhTPgGdBiNUHGlGpm_dlo4b87jJoc2XXcJmkRYNk3U-esyy9dvCeD7g"
+          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2MDY3NTIyMTMsInBheWxvYWQiOiJ0ZXN0IiwiaXNzIjoidW5paW4tbWluaW8iLCJsYWJlbCI6IjFiNTNlMTNhZDQxODRjMGViNjNhZDE2MGY2MTcxMjI2IiwiZXhwIjoxNjA2NzU5NDEzfQ.4m0cg_OdNasF64CviBsJW8jgpTmyJgJ22vY8hKgbrhfT4rVkinwzNE49AzTjwTcIUBVUJKt75HOJ_mppcNzdYA\n"
         );
         xhr.send(data);
         xhr.onload = e => {
@@ -196,44 +196,44 @@ export default {
       const fileChunkList = this.createFileChunk(this.container.file);
       this.container.hash = await this.calculateHash(fileChunkList);
 
-      const { shouldUpload, uploadedList } = await this.verifyUpload(
+      const { completed, completedChunks } = await this.verifyUpload(
         DefaultBucketName,
         this.container.file.name,
         this.container.hash,
         this.container.file.size
       );
-      if (!shouldUpload) {
+      if (completed) {
         this.$message.success("秒传：上传成功");
         this.status = Status.wait;
         return;
       }
-
       this.data = fileChunkList.map(({ file }, index) => ({
-        fileHash: this.container.hash,
-        index,
-        hash: this.container.hash + "-" + index,
+        identifier: this.container.hash,
+        index: index - 1,
+        hash: this.container.hash,
         chunk: file,
         size: file.size,
-        percentage: uploadedList.includes(index) ? 100 : 0
+        percentage: completedChunks.includes(index) ? 100 : 0
       }));
 
-      await this.uploadChunks(uploadedList);
+      await this.uploadChunks(completedChunks);
     },
     // 上传切片，同时过滤已上传的切片
     async uploadChunks(uploadedList = []) {
       const requestList = this.data
-        .filter(({ hash }) => !uploadedList.includes(hash))
+        .filter(({ index }) => !uploadedList.includes(index))
         .map(({ chunk, index }) => {
           const formData = new FormData();
-          formData.append("chunk", chunk);
+          formData.append("file", chunk);
           formData.append("chunkNumber", index);
+          formData.append("bucketName", DefaultBucketName);
           formData.append("filename", this.container.file.name);
           formData.append("identifier", this.container.hash);
           return { formData, index };
         })
         .map(async ({ formData, index }) =>
           this.request({
-            url: "http://localhost:8080/oss/break-point-upload",
+            url: "http://localhost:8888/oss/break-point-upload",
             data: formData,
             onProgress: this.createProgressHandler(this.data[index]),
             requestList: this.requestList
@@ -242,31 +242,12 @@ export default {
       await Promise.all(requestList);
       // 之前上传的切片数量 + 本次上传的切片数量 = 所有切片数量时
       // 合并切片
-      if (uploadedList.length + requestList.length === this.data.length) {
-        await this.mergeRequest();
-      }
-    },
-    // 通知服务端合并切片
-    async mergeRequest() {
-      await this.request({
-        url: "http://localhost:8000/merge",
-        headers: {
-          "content-type": "application/json"
-        },
-        data: JSON.stringify({
-          size: SIZE,
-          fileHash: this.container.hash,
-          filename: this.container.file.name
-        })
-      });
-      this.$message.success("上传成功");
-      this.status = Status.wait;
     },
     // 根据 hash 验证文件是否曾经已经被上传过
     // 没有才进行上传
     async verifyUpload(bucketName, fileName, identifier, fileSize) {
       const { data } = await this.request({
-        url: "http://127.0.0.1:8080/oss/break-point-upload-init",
+        url: "http://127.0.0.1:8888/oss/break-point-upload-init",
         headers: {
           "content-type": "application/json"
         },
