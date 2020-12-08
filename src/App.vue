@@ -49,8 +49,9 @@
 </template>
 
 <script>
-const SIZE = 5 * 1024 * 1024; // 切片大小
-
+const SIZE = 10 * 1024 * 1024; // 切片大小
+const BASE_URL = "http://10.14.31.79:8888";
+// const BASE_URL = "http://127.0.0.1:8888";
 const DefaultBucketName = "test";
 const Status = {
   wait: "wait",
@@ -142,7 +143,7 @@ export default {
         );
         xhr.setRequestHeader(
           "Authorization",
-          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2MDY3NTIyMTMsInBheWxvYWQiOiJ0ZXN0IiwiaXNzIjoidW5paW4tbWluaW8iLCJsYWJlbCI6IjFiNTNlMTNhZDQxODRjMGViNjNhZDE2MGY2MTcxMjI2IiwiZXhwIjoxNjA2NzU5NDEzfQ.4m0cg_OdNasF64CviBsJW8jgpTmyJgJ22vY8hKgbrhfT4rVkinwzNE49AzTjwTcIUBVUJKt75HOJ_mppcNzdYA\n"
+          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2MDczMzA3NjUsInBheWxvYWQiOiJ0ZXN0IiwiaXNzIjoidW5paW4tbWluaW8iLCJsYWJlbCI6IjJiOGNiNGZiN2NhNjQwNzFhMjVhYmMxNjNmYTYyMzBkIiwiZXhwIjoxNjA3MzM3OTY1fQ.ONry6uT5O9fusZNJq2JgxmBEQqSOE3AMiv0YusNxEZ3N6Z9eqLEDWkRAQsMBo9Q6BGsXLgAXTDmfJ9G4W4ksRA"
         );
         xhr.send(data);
         xhr.onload = e => {
@@ -209,7 +210,7 @@ export default {
       }
       this.data = fileChunkList.map(({ file }, index) => ({
         identifier: this.container.hash,
-        index: index - 1,
+        index: index,
         hash: this.container.hash,
         chunk: file,
         size: file.size,
@@ -227,13 +228,13 @@ export default {
           formData.append("file", chunk);
           formData.append("chunkNumber", index);
           formData.append("bucketName", DefaultBucketName);
-          formData.append("filename", this.container.file.name);
+          formData.append("fileName", this.container.file.name);
           formData.append("identifier", this.container.hash);
           return { formData, index };
         })
         .map(async ({ formData, index }) =>
           this.request({
-            url: "http://localhost:8888/oss/break-point-upload",
+            url: BASE_URL + "/oss/break-point-upload",
             data: formData,
             onProgress: this.createProgressHandler(this.data[index]),
             requestList: this.requestList
@@ -247,7 +248,7 @@ export default {
     // 没有才进行上传
     async verifyUpload(bucketName, fileName, identifier, fileSize) {
       const { data } = await this.request({
-        url: "http://127.0.0.1:8888/oss/break-point-upload-init",
+        url: BASE_URL + "/oss/break-point-upload-init",
         headers: {
           "content-type": "application/json"
         },
