@@ -50,8 +50,8 @@
 
 <script>
 const SIZE = 10 * 1024 * 1024; // 切片大小
-const BASE_URL = "http://10.14.31.79:8888";
-// const BASE_URL = "http://127.0.0.1:8888";
+// const BASE_URL = "http://10.14.31.79:8888";
+const BASE_URL = "http://127.0.0.1:8888";
 const DefaultBucketName = "test";
 const Status = {
   wait: "wait",
@@ -143,7 +143,7 @@ export default {
         );
         xhr.setRequestHeader(
           "Authorization",
-          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2MDczMzA3NjUsInBheWxvYWQiOiJ0ZXN0IiwiaXNzIjoidW5paW4tbWluaW8iLCJsYWJlbCI6IjJiOGNiNGZiN2NhNjQwNzFhMjVhYmMxNjNmYTYyMzBkIiwiZXhwIjoxNjA3MzM3OTY1fQ.ONry6uT5O9fusZNJq2JgxmBEQqSOE3AMiv0YusNxEZ3N6Z9eqLEDWkRAQsMBo9Q6BGsXLgAXTDmfJ9G4W4ksRA"
+          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJuYmYiOjE2MDc0OTcyOTYsInBheWxvYWQiOiJ0ZXN0IiwiaXNzIjoidW5paW4tbWluaW8iLCJsYWJlbCI6IjdmNjQ4ODQzNWE2NTQ3ZTlhZTNlODM0MTU4YjNjNDFiIiwiZXhwIjoxNjA3NTA0NDk2fQ.GJVbu6oIOg5spD-MC9ZwUvL8X9fiHUPdc6hBOL5vo38R4yV1yOiYYY_XjPzHfOLs0JfAv5OM256Bq7SKObBMOQ"
         );
         xhr.send(data);
         xhr.onload = e => {
